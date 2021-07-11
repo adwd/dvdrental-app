@@ -1,0 +1,45 @@
+{
+  "name": "nexus-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only --no-notify api/index.ts",
+    "build": "tsc",
+    "generate": "ts-node --transpile-only api/schema",
+    "test": "npm run generate && jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^2.26.0",
+    "apollo-server": "^2.25.2",
+    "graphql": "^15.5.1",
+    "graphql-iso-date": "^3.6.1",
+    "nexus": "^1.1.0",
+    "nexus-prisma": "^0.29.1"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "warnOnly": true
+        }
+      }
+    },
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@types/graphql-iso-date": "^3.4.0",
+    "@types/jest": "^26.0.24",
+    "get-port": "^5.1.1",
+    "graphql-request": "^3.4.0",
+    "jest": "^27.0.6",
+    "prisma": "^2.26.0",
+    "ts-jest": "^27.0.3",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.3.5"
+  }
+}
