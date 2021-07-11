@@ -1,0 +1,17 @@
+{
+  "name": "postgraphile-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "instant": "postgraphile -c 'postgres://postgres:mysecretpassword@localhost:5432/dvdrental' --watch --enhance-graphiql --dynamic-json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "graphql": "^15.5.1",
+    "postgraphile": "^4.12.3"
+  },
+  "devDependencies": {}
+}
