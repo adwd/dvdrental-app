@@ -13,6 +13,7 @@ http
         graphiql: true,
         enhanceGraphiql: true,
         appendPlugins: [PgSimplifyInflectorPlugin],
+        classicIds: true,
       }
     )
   )
