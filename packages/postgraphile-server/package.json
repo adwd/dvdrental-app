@@ -4,14 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "instant": "postgraphile -c 'postgres://postgres:mysecretpassword@localhost:5432/dvdrental' --watch --enhance-graphiql --dynamic-json"
+    "instant": "postgraphile -c 'postgres://postgres:mysecretpassword@localhost:5432/dvdrental' --watch --enhance-graphiql --dynamic-json",
+    "start": "ts-node src/index.ts",
+    "dev": "tsnd --respawn src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
+    "@types/node": "^16.3.3",
+    "graphile-utils": "^4.12.1",
     "graphql": "^15.5.1",
-    "postgraphile": "^4.12.3"
+    "postgraphile": "^4.12.3",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-node-dev": "^1.1.8"
+  }
 }
