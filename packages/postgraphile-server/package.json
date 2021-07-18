@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "instant": "postgraphile -c 'postgres://postgres:mysecretpassword@localhost:5432/dvdrental' --watch --enhance-graphiql --dynamic-json"
+    "instant": "postgraphile -c 'postgres://postgres:mysecretpassword@localhost:5432/dvdrental' --watch --enhance-graphiql --dynamic-json",
+    "start": "node ./index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "graphql": "^15.5.1",
     "postgraphile": "^4.12.3"
   },
