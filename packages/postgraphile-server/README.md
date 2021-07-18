@@ -53,3 +53,60 @@ query GetUser {
 
 実運用だとデフォルトの Mutation を Disable にして、この SQL 関数とかでビジネスロジックを反映した Mutation を加えることになると思うが、
 PostgreSQL の経験があるチームならそれでいいけどそうでないなら別の手段が欲しい気がする。
+
+### Computed Columns
+
+https://www.graphile.org/postgraphile/computed-columns/
+
+```sql
+CREATE FUNCTION actor_full_name(actor actor) RETURNS text AS $$
+  SELECT actor.first_name || ' ' || actor.last_name
+$$ LANGUAGE sql STABLE;
+```
+
+```graphql
+query GetActor {
+  actor(actorId: 1) {
+    id
+    firstName
+    lastName
+    fullName
+  }
+}
+```
+
+## Custom Queries
+
+https://www.graphile.org/postgraphile/custom-queries/
+
+```sql
+create function search_actors(search text)
+returns setof actor as $$
+    select *
+    from actor
+    where
+      first_name ilike ('%' || search || '%') or
+      last_name ilike ('%' || search || '%')
+  $$ language sql stable;
+```
+
+```graphql
+query SearchActors {
+  searchActors(search: "bob", first: 10) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+```
