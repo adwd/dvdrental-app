@@ -1,5 +1,7 @@
 # README
 
+## To be read
+
 ## note
 
 https://www.graphile.org/postgraphile/introduction/
@@ -27,3 +29,27 @@ disableDefaultMutations: true でデフォルトで生成される CRUD を無�
 https://www.graphile.org/postgraphile/node-id/
 
 デフォルトだと `nodeId` がグローバルにユニークな ID が入るが、 `classicIds: true` で `id` にできる
+
+### Database Functions
+
+https://www.graphile.org/postgraphile/functions/
+
+SQL 関数を定義すると GraphQL にも反映される
+
+```sql
+create function get_film(id int) returns film as $$
+  select * from film where film.film_id = $1;
+$$ language sql stable;
+```
+
+```graphql
+query GetUser {
+  getFilm(id: 1) {
+    id
+    title
+  }
+}
+```
+
+実運用だとデフォルトの Mutation を Disable にして、この SQL 関数とかでビジネスロジックを反映した Mutation を加えることになると思うが、
+PostgreSQL の経験があるチームならそれでいいけどそうでないなら別の手段が欲しい気がする。
