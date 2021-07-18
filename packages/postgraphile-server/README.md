@@ -2,6 +2,8 @@
 
 ## note
 
+https://www.graphile.org/postgraphile/introduction/
+
 ### Inflection
 
 https://www.graphile.org/postgraphile/inflection/
