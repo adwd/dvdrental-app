@@ -1,6 +1,7 @@
 import http from "http";
 import { postgraphile } from "postgraphile";
 import PgSimplifyInflectorPlugin from "@graphile-contrib/pg-simplify-inflector";
+import { myPlugin } from "./my-plugin";
 
 http
   .createServer(
@@ -12,7 +13,7 @@ http
         watchPg: true,
         graphiql: true,
         enhanceGraphiql: true,
-        appendPlugins: [PgSimplifyInflectorPlugin],
+        appendPlugins: [PgSimplifyInflectorPlugin, myPlugin],
         classicIds: true,
       }
     )
