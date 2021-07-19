@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
+    "@graphile/pg-aggregates": "^0.1.0",
     "@types/node": "^16.3.3",
     "graphile-utils": "^4.12.1",
     "graphql": "^15.5.1",

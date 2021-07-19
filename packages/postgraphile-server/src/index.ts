@@ -1,6 +1,8 @@
 import http from "http";
 import { postgraphile } from "postgraphile";
+import { TagsFilePlugin } from "postgraphile/plugins";
 import PgSimplifyInflectorPlugin from "@graphile-contrib/pg-simplify-inflector";
+import PgAggregatesPlugin from "@graphile/pg-aggregates";
 import { myPlugin } from "./my-plugin";
 
 http
@@ -13,7 +15,12 @@ http
         watchPg: true,
         graphiql: true,
         enhanceGraphiql: true,
-        appendPlugins: [PgSimplifyInflectorPlugin, myPlugin],
+        appendPlugins: [
+          TagsFilePlugin,
+          PgSimplifyInflectorPlugin,
+          PgAggregatesPlugin,
+          myPlugin,
+        ],
         classicIds: true,
       }
     )
