@@ -162,3 +162,41 @@ export const myPlugin = makeExtendSchemaPlugin(() => ({
   },
 }));
 ```
+
+## Views
+
+https://www.graphile.org/postgraphile/views/
+
+```sql
+CREATE VIEW english_film AS
+    SELECT *
+    FROM film
+    WHERE language_id = 1;
+```
+
+```graphql
+query EnglishFilms {
+  englishFilms {
+    edges {
+      node {
+        filmId
+        title
+      }
+    }
+  }
+}
+```
+
+## Aggregates
+
+https://www.graphile.org/postgraphile/aggregates/
+
+```graphql
+query FilmLanguages {
+  films {
+    groupedAggregates(groupBy: LANGUAGE_ID) {
+      keys
+    }
+  }
+}
+```
