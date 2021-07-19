@@ -4,6 +4,14 @@
 
 - Custom Mutations
   - https://www.graphile.org/postgraphile/custom-mutations/
+- Security
+  - https://www.graphile.org/postgraphile/security/
+  - JWT のやつを動かしてみる？
+- その他（必要になったら読む）
+  - https://www.graphile.org/postgraphile/realtime/
+  - https://www.graphile.org/postgraphile/subscriptions/
+  - https://www.graphile.org/postgraphile/background-tasks/
+  - https://www.graphile.org/postgraphile/debugging/
 
 ## note
 
@@ -199,4 +207,23 @@ query FilmLanguages {
     }
   }
 }
+```
+
+## Smart Tags
+
+https://www.graphile.org/postgraphile/smart-tags/
+
+> Ways of adding tags
+> There's multiple ways of adding tags to entities:
+>
+> - The postgraphile.tags.json5 file
+> - Smart Comments in the database via COMMENT
+> - A makePgSmartTagsPlugin instance
+> - Your own custom Graphile Engine plugin
+
+```sql
+comment on table original_table is E'@name renamed_table';
+comment on column original_table.col1 is E'@name colA';
+comment on type flibble is E'@name flamble';
+comment on function getFlamble() is E'@name allFlambles';
 ```
