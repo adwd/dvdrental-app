@@ -14,12 +14,12 @@
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
     "@graphile/pg-aggregates": "^0.1.0",
-    "@types/node": "^16.3.3",
-    "graphile-utils": "^4.12.1",
+    "@types/node": "^16.11.6",
+    "graphile-utils": "^4.12.2",
     "graphql": "^15.5.1",
-    "postgraphile": "^4.12.3",
-    "ts-node": "^10.1.0",
-    "typescript": "^4.3.5"
+    "postgraphile": "^4.12.5",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
     "ts-node-dev": "^1.1.8"
