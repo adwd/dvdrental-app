@@ -1,4 +1,4 @@
-# README
+# GraphQL Sample App
 
 ## これはなに
 
