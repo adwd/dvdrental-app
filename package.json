@@ -1,5 +1,5 @@
 {
-  "name": "dvdrental-app",
+  "name": "graphql-sample-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adwd/dvdrental-app.git"
+    "url": "git+https://github.com/adwd/graphql-sample-app.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/adwd/dvdrental-app/issues"
+    "url": "https://github.com/adwd/graphql-sample-app/issues"
   },
-  "homepage": "https://github.com/adwd/dvdrental-app#readme",
+  "homepage": "https://github.com/adwd/graphql-sample-app#readme",
   "private": true,
   "workspaces": [
     "packages/*"
