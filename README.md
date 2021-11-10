@@ -15,6 +15,6 @@ GraphQL のサーバーと React のクライアントアプリのセットで�
 ```bash
 yarn
 docker compose up -d
-yarn workspace server dev
+yarn workspace postgraphile-server dev
 # yarn workspace app dev
 ```

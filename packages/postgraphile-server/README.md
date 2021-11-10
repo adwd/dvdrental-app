@@ -1,4 +1,4 @@
-# Server
+# Postgraphile Server
 
 ```sh
 # コードの変更を監視して再起動するサーバーを起動します
