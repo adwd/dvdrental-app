@@ -6,16 +6,6 @@ export const myPlugin = makeExtendSchemaPlugin((build) => {
   const pgSql = build.pgSql as PGSQL2;
   return {
     typeDefs: gql`
-      enum AnimalType {
-        CAT
-        DOG
-        FISH
-      }
-
-      type Pet {
-        type: AnimalType!
-      }
-
       extend type Actor {
         score: Int
       }
@@ -30,30 +20,18 @@ export const myPlugin = makeExtendSchemaPlugin((build) => {
       }
 
       extend type Query {
-        pet: Pet
         randomFilm: Film
-        randomFilmsConnection: FilmsConnection
       }
 
       extend type Mutation {
         updateActorName(
-          id: ID!
+          actorId: Int!
           input: UpdateActorNameInput!
         ): UpdateActorNamePayload!
       }
     `,
     resolvers: {
-      AnimalType: {
-        CAT: "cat",
-        DOG: "dog",
-        FISH: "fish",
-      },
       Query: {
-        pet: async (_query, args, context, resolveInfo) => {
-          return {
-            type: "cat",
-          };
-        },
         randomFilm: async (_query, args, context, resolveInfo) => {
           // Remember: resolveInfo.graphile.selectGraphQLResultFromTable is where the PostGraphile
           // look-ahead magic happens!
@@ -65,14 +43,6 @@ export const myPlugin = makeExtendSchemaPlugin((build) => {
             }
           );
           return rows[0];
-        },
-        randomUsersConnection: (_query, args, context, resolveInfo) => {
-          return resolveInfo.graphile.selectGraphQLResultFromTable(
-            pgSql.fragment`film`,
-            (tableAlias, queryBuilder) => {
-              // queryBuilder.orderBy(pgSql.fragment`random()`);
-            }
-          );
         },
       },
       Mutation: {
@@ -91,7 +61,7 @@ export const myPlugin = makeExtendSchemaPlugin((build) => {
                       last_name = $2
                WHERE  actor_id = $3
                RETURNING *`,
-              [args.input.firstName, args.input.lastName, args.id]
+              [args.input.firstName, args.input.lastName, args.actorId]
             );
 
             // Now we fetch the result that the GraphQL

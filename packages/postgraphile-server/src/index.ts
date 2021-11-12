@@ -24,6 +24,7 @@ http
           myPlugin,
         ],
         classicIds: true,
+        enableCors: true,
       }
     )
   )
