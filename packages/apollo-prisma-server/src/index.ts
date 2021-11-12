@@ -1,45 +1,98 @@
-import { ApolloServer } from "apollo-server";
-import { loadTypedefsSync } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-import { Book, Resolvers } from "./generated/graphql";
+// Apolloのドキュメントから持ってきたコードをちょっと変更したもの
+// https://www.apollographql.com/docs/apollo-server/data/resolvers/
+import { ApolloServer, gql } from "apollo-server";
 
-const sources = loadTypedefsSync("src/schema.graphql", {
-  loaders: [new GraphQLFileLoader()],
-});
-const typeDefs = sources.map((source) => source.document);
+// スキーマ定義
+const typeDefs = gql`
+  type Query {
+    # 単純なQueryのサンプル
+    users: [User]
+    # GraphQL Resolverがネストして実行されるサンプル
+    libraries: [Library]
+  }
 
-const books: Book[] = [
+  type User {
+    name: String!
+    address: String
+  }
+
+  type Library {
+    branch: String!
+    books: [Book!]
+  }
+
+  type Book {
+    title: String!
+    author: Author!
+  }
+
+  type Author {
+    name: String!
+  }
+`;
+
+// ハードコードしたデータ
+// usersは上で定義しているUserの型と一致するが、
+// libraryとbooksはibrary/Bookの型とちょっと違う
+// この下に実装しているResolverがネストして実行されることで解決される
+const users = [
   {
-    __typename: "Book",
-    title: "The Awakening",
-    author: "Kate Chopin",
+    name: "John Doe",
+    address: "123 Main St",
   },
   {
-    __typename: "Book",
-    title: "City of Glass",
-    author: "Paul Auster",
+    name: "Alice Smith",
   },
 ];
 
-const resolvers: Resolvers = {
-  Query: {
-    books: () => books,
+const libraries = [
+  {
+    branch: "downtown",
   },
-  Mutation: {
-    addBook: (parent, args, context, info) => {
-      const newBook: Book = {
-        __typename: "Book",
-        author: args.input.author,
-        title: args.input.title,
-      };
-      books.push(newBook);
+  {
+    branch: "riverside",
+  },
+];
 
-      return newBook;
+const books = [
+  {
+    title: "The Awakening",
+    author: "Kate Chopin",
+    branch: "riverside",
+  },
+  {
+    title: "City of Glass",
+    author: "Paul Auster",
+    branch: "downtown",
+  },
+];
+
+// Resolver
+const resolvers = {
+  Query: {
+    users() {
+      return users;
+    },
+    libraries() {
+      return libraries;
+    },
+  },
+  Library: {
+    books(parent) {
+      return books.filter((book) => book.branch === parent.branch);
+    },
+  },
+  Book: {
+    author(parent) {
+      return {
+        name: parent.author,
+      };
     },
   },
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
+
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });
