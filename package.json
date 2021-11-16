@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server1": "yarn workspace apollo-prisma-server dev",
-    "server2": "yarn workspace postgraphile-server dev"
+    "server2": "yarn workspace postgraphile-server dev",
+    "client-app": "yarn workspace react-apollo-client dev"
   },
   "repository": {
     "type": "git",

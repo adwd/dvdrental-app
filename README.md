@@ -1,8 +1,13 @@
 # GraphQL Sample App
 
-## これはなに
+GraphQL のサーバーを Apollo Server と PostGraphile で実装したものと、React/Apollo なクライアントアプリのセットです。
 
-GraphQL のサーバーを Apollo Server と PostGraphile で実装したもののセットです
+## このサンプルアプリのゴール
+
+- GraphQL の基本的なところが Playground を触ることでわかる
+- Resolver の仕組みがわかる
+- PostGraphile の便利さがわかる
+- クライアントサイドでの GraphQL の便利さがわかる
 
 ## 動作環境
 
@@ -17,11 +22,15 @@ GraphQL のサーバーを Apollo Server と PostGraphile で実装したもの�
 yarn
 
 # Apollo Serverの起動
-yarn workspace apollo-prisma-server dev
+yarn server1
 
 # PostGraphileの起動、事前にdocker compose upが必要です
 docker compose up -d
-yarn workspace postgraphile-server dev
+yarn server2
+
+# React, Apollo Clientなクライアントの起動
+# PostGraphileサーバーに接続します
+yarn client-app
 ```
 
 ## Apollo Server
@@ -32,7 +41,7 @@ https://www.apollographql.com/docs/apollo-server/
 cd packages/apollo-prisma-server
 ```
 
-※apollo-prisma-server とありますが Prisma はまだ使ってません
+> apollo-prisma-server とありますが Prisma はまだ使ってません
 
 Apollo Server を使って GraphQL サーバーを実装するサンプルです。
 バックエンドサーバーとして普通はデータベースなどに問い合わせるところをハードコードしたデータを使っています。
@@ -49,3 +58,14 @@ cd packages/postgraphile-server
 PostgreSQL と接続して GraphQL API を自動で生成する PostGraphile を使ったサンプルです。
 `docker compose up -d` で起動している DVD レンタルを模したデータが入っているサーバーと接続します。
 とりあえずの雰囲気と、 `src/my-plugin.ts` で DB 外のロジックを連携できる雰囲気がわかるかもしれません。
+
+## React, Apollo Client App
+
+https://www.apollographql.com/docs/react/
+
+```bash
+cd packages/react-apoll-client
+```
+
+React と Apollo Client を使って実装した Web アプリです。PostGraphile サーバーに接続します。
+クライアントサイドで欲しい情報を一度に取得できてそのまま表示できて便利な感じとか、Fragment を使ってどんなデータを要求するかの凝集度を高められている様子がわかるかもしれません。
