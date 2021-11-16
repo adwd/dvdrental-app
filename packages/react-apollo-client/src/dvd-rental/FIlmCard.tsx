@@ -17,6 +17,17 @@ export const FilmCard: FC<{ film: FilmCardFragment }> = ({ film }) => {
           <Badge borderRadius="full" px="2" colorScheme="teal">
             {film?.rentalRate}
           </Badge>
+          {film?.filmCategories?.nodes.map((filmAndCategory) => (
+            <Box
+              as="span"
+              ml="2"
+              color="gray.600"
+              fontSize="sm"
+              key={filmAndCategory?.id}
+            >
+              {filmAndCategory?.category?.name}
+            </Box>
+          ))}
           <Box
             color="gray.500"
             fontWeight="semibold"
@@ -33,8 +44,8 @@ export const FilmCard: FC<{ film: FilmCardFragment }> = ({ film }) => {
           {film?.title}
         </Box>
 
-        <Box mt="1" fontSize={12} as="h4">
-          出演者
+        <Box mt="1" fontSize="small">
+          {film?.description}
         </Box>
 
         <Box display="flex" mt="2" alignItems="center">
