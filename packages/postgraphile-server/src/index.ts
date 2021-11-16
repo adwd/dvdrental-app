@@ -17,6 +17,9 @@ http
         watchPg: true,
         graphiql: true,
         enhanceGraphiql: true,
+        allowExplain: (req) => {
+          return true;
+        },
         appendPlugins: [
           TagsFilePlugin,
           PgSimplifyInflectorPlugin,

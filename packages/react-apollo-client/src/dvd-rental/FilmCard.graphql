@@ -1,0 +1,24 @@
+fragment FilmCard on Film {
+  id
+  title
+  description
+  releaseYear
+  rentalDuration
+  rentalRate
+  filmCategories {
+    nodes {
+      id
+      category {
+        name
+      }
+    }
+  }
+  filmActors(first: 3, orderBy: NATURAL) {
+    nodes {
+      id
+      actor {
+        ...ActorList
+      }
+    }
+  }
+}
