@@ -1,6 +1,7 @@
 // Apolloのドキュメントから持ってきたコードをちょっと変更したもの
 // https://www.apollographql.com/docs/apollo-server/data/resolvers/
 import { ApolloServer, gql } from "apollo-server";
+import { Resolvers } from "./generated/graphql";
 
 // スキーマ定義
 const typeDefs = gql`
@@ -11,8 +12,13 @@ const typeDefs = gql`
     libraries: [Library]
   }
 
+  type Mutation {
+    addUser(input: AddUserInput!): User
+  }
+
   type User {
     name: String!
+    status: Status!
     address: String
   }
 
@@ -29,6 +35,16 @@ const typeDefs = gql`
   type Author {
     name: String!
   }
+
+  enum Status {
+    ACTIVE
+    INACTIVE
+  }
+
+  input AddUserInput {
+    name: String!
+    address: String
+  }
 `;
 
 // ハードコードしたデータ
@@ -38,10 +54,12 @@ const typeDefs = gql`
 const users = [
   {
     name: "John Doe",
+    status: "ACTIVE",
     address: "123 Main St",
   },
   {
     name: "Alice Smith",
+    status: "INACTIVE",
   },
 ];
 
@@ -78,15 +96,35 @@ const resolvers = {
     },
   },
   Library: {
-    books(parent) {
+    // GraphQL Resolverは4つの引数を取る
+    // https://www.apollographql.com/docs/apollo-server/data/resolvers/#resolver-arguments
+    books(parent, args, context, info) {
       return books.filter((book) => book.branch === parent.branch);
     },
   },
   Book: {
+    // このようなparentからフィールドを返すだけのResolverは省略できる
+    // https://www.apollographql.com/docs/apollo-server/data/resolvers/#default-resolvers
+    title(parent) {
+      return parent.title;
+    },
     author(parent) {
       return {
         name: parent.author,
       };
+    },
+  },
+  User: {
+    status(parent) {
+      return parent.status;
+    },
+  },
+  Mutation: {
+    addUser(_, args) {
+      const { name, status, address } = args.input;
+      const newUser = { name, status: "ACTIVE", address };
+      users.push(newUser);
+      return newUser;
     },
   },
 };
