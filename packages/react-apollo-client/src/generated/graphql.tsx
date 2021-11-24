@@ -11980,7 +11980,7 @@ export type HighestRatedFilmsPageQueryVariables = Exact<{
 }>;
 
 
-export type HighestRatedFilmsPageQuery = { __typename?: 'Query', films?: { __typename?: 'FilmsConnection', totalCount: number, nodes: Array<{ __typename?: 'Film', id: string, title: string, description?: string | null | undefined, releaseYear?: any | null | undefined, rentalDuration: number, rentalRate: any, filmCategories: { __typename?: 'FilmCategoriesConnection', nodes: Array<{ __typename?: 'FilmCategory', id: string, category?: { __typename?: 'Category', name: string } | null | undefined } | null | undefined> }, filmActors: { __typename?: 'FilmActorsConnection', nodes: Array<{ __typename?: 'FilmActor', id: string, actor?: { __typename?: 'Actor', id: string, lastName: string, firstName: string } | null | undefined } | null | undefined> } } | null | undefined> } | null | undefined };
+export type HighestRatedFilmsPageQuery = { __typename?: 'Query', actors?: { __typename?: 'ActorsConnection', nodes: Array<{ __typename?: 'Actor', firstName: string, lastName: string, id: string, filmActors: { __typename?: 'FilmActorsConnection', totalCount: number } } | null | undefined> } | null | undefined, films?: { __typename?: 'FilmsConnection', totalCount: number, nodes: Array<{ __typename?: 'Film', id: string, title: string, description?: string | null | undefined, releaseYear?: any | null | undefined, rentalDuration: number, rentalRate: any, filmCategories: { __typename?: 'FilmCategoriesConnection', nodes: Array<{ __typename?: 'FilmCategory', id: string, category?: { __typename?: 'Category', name: string } | null | undefined } | null | undefined> }, filmActors: { __typename?: 'FilmActorsConnection', nodes: Array<{ __typename?: 'FilmActor', id: string, actor?: { __typename?: 'Actor', id: string, lastName: string, firstName: string } | null | undefined } | null | undefined> } } | null | undefined> } | null | undefined };
 
 export const ActorListFragmentDoc = gql`
     fragment ActorList on Actor {
@@ -12017,6 +12017,16 @@ export const FilmCardFragmentDoc = gql`
     ${ActorListFragmentDoc}`;
 export const HighestRatedFilmsPageDocument = gql`
     query HighestRatedFilmsPage($filmCount: Int!) {
+  actors(orderBy: FILM_ACTORS_COUNT_DESC, first: 3) {
+    nodes {
+      firstName
+      lastName
+      id
+      filmActors {
+        totalCount
+      }
+    }
+  }
   films(first: $filmCount, orderBy: RENTAL_RATE_DESC) {
     totalCount
     nodes {
