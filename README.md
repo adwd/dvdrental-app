@@ -2,6 +2,10 @@
 
 GraphQL のサーバーを Apollo Server と PostGraphile で実装したものと、React/Apollo なクライアントアプリのセットです。
 
+## ハンズオン資料
+
+https://github.com/adwd/graphql-sample-app/blob/main/docs/hands-on.md
+
 ## このサンプルアプリのゴール
 
 - GraphQL の基本的なところが Playground を触ることでわかる
