@@ -6,6 +6,17 @@ marp: true
 
 ---
 
+# ゴール
+
+- GraphQL がなんとなくわかる
+- Apollo Studio がなんとなく触れる
+- Resolver の仕組みがわかる
+- （時間があれば）
+  - フロントエンドのうれしさがわかる
+  - PostGraphile の便利さがわかる
+
+---
+
 # やること
 
 ハンズオンとなってますが動作するコードは用意してあるので説明 70%、手を動かすの 30% くらいです :innocent:
@@ -16,21 +27,9 @@ marp: true
 - GraphQL の基本的なところ
 - Apollo Studio で Query や Mutation を実行する
 - Resolver について
-  - これがメイン、残りは時間があまれば
+  - これがメイン、残りは時間が余ったら
 - フロントエンドのうれしさ
 - PostGraphile
-
----
-
-# ゴール
-
-このハンズオンのゴール
-
-- GraphQL がなんとなくわかる
-- Resolver の仕組みがわかる
-- （時間があれば）
-  - フロントエンドのうれしさがわかる
-  - PostGraphile の便利さがわかる
 
 ---
 
@@ -66,7 +65,7 @@ GraphQL のサーバーが 2 つ、React クライアントアプリが 1 つ、
 yarn workspace というのを使っていて、プロジェクトのルートディレクトリから
 
 - `yarn server1`
-  - Apollo Server
+  - Apollo Studio、Resolver の説明に使う Apollo Server
 - `yarn server2`
   - Hasura Server
 - `yarn client-app`
@@ -79,6 +78,7 @@ yarn workspace というのを使っていて、プロジェクトのルート�
 # GraphQL の基本的なところ
 
 [GraphQL](https://graphql.org/) は GraphQL Foundation が定める仕様で、主にクライアントが要求したクエリ通りのデータが返ってくるための仕組みを定義してあります。
+参照実装として[graphql-js](https://github.com/graphql/graphql-js)があり、Node.js ではよく用いられています。
 
 ![](https://raw.githubusercontent.com/adwd/graphql-sample-app/main/docs/images/screenshot-graphql-playground.png)
 こんな感じで、クライアントが欲しいデータの形を要求するとそのまま返ってくるのが特徴です。
@@ -110,7 +110,7 @@ http://localhost:4000/  を開くとこんな画面が表示されるので、�
 
 ---
 
-Apollo Studio が起動します。Apollo Studio は GraphQL を使った開発に必要な多くの機能を提供するサービスですが、今回はで Query や Mutation を実行できるプレイグラウンドとスキーマのドキュメント機能を使います。似た用途の OSS としては [GraphiQL](https://github.com/graphql/graphiql) や [GraphQL Playground](https://github.com/graphql/graphql-playground) があります。
+Apollo Studio が起動します。Apollo Studio は GraphQL を使った開発に必要な多くの機能を提供するサービスですが、今回は Query や Mutation を実行できるプレイグラウンドとスキーマのドキュメント機能を使います。似た用途の OSS としては [GraphiQL](https://github.com/graphql/graphiql) や [GraphQL Playground](https://github.com/graphql/graphql-playground) があります。
 
 ![](https://raw.githubusercontent.com/adwd/graphql-sample-app/main/docs/images/screenshot3.png)
 
@@ -147,8 +147,8 @@ Ctrl+Space でサジェスト、Cmd+Enter でオペレーション実行など�
 ---
 
 > 細かい話
-> この Playground の仕組みは、GraphQL の [Introspection](https://graphql.org/learn/introspection/)という仕組みを使っていて、 `__schema` などの Query が用意されていて Apollo Studio はこれを起動時に実行することでスキーマ情報を取得しています。Chrome Devtools の Network タブから見れます。
-> これは開発用途の仕組みのため、プロダクション環境では無効化することが推奨されています。
+> この Playground の仕組みは、GraphQL の [Introspection](https://graphql.org/learn/introspection/)という仕組みを使っていて、 `__schema` などデベロッパー用の Query が用意されていて Apollo Studio はこれを起動時に実行することでスキーマ情報を取得しています。Chrome Devtools の Network タブを見ると Introspection Query を実行しているのがわかります。
+> Introspection は開発用途の仕組みのため、プロダクション環境では無効化することが推奨されています。
 
 ```graphql
 query IntrospectionQuery {
@@ -186,12 +186,11 @@ https://graphql.org/learn/execution/
 
 ---
 
-サンプルアプリの Resolver の[コード](https://github.com/adwd/graphql-sample-app/blob/main/packages/apollo-prisma-server/src/index.ts)はこんな感じです。これがどう動くかイメージしにくいと思うので次のページから説明します。
+Resolver のコードです。次のページで動作のイメージを説明します。
+https://github.com/adwd/graphql-sample-app/blob/main/packages/apollo-prisma-server/src/index.ts
 
 ```ts
-// https://github.com/adwd/graphql-sample-app/blob/main/packages/apollo-prisma-server/src/index.ts
 const resolvers = {
-  // 前段で実行された Resolver の結果が引数の parent に入って実行されます。
   Query: {
     libraries() {
       return libraries;
@@ -214,8 +213,9 @@ const resolvers = {
 
 ---
 
-**Resolver 完全理解タイム**
-例えばこの Query に対する GraphQL サーバーの Resolver の実行は下の図のようになります。Query のツリーの形に沿って Resolver が実行されます。前のページのコードと見比べると動作のイメージがわかってきますか…？
+## Resolver 完全理解タイム
+
+例えばこの Query に対する GraphQL サーバーの Resolver の実行は下の図のようになります。Query のツリーの形に沿って Resolver が実行されます。前のページのコードと見比べると動作のイメージがなんとなく伝わりますかね…？
 
 ```graphql
 query {
@@ -234,25 +234,37 @@ query {
 
 ---
 
+# Resolver の処理を追ってみる
+
 サンプルコードだと、ハードコードしてあるデータの形と GraphQL スキーマの型が微妙に違っています。Resolver の実装を追うとその違いがあってもちゃんと GraphQL スキーマの型にあったデータを返せてる様子がわかると思います。
-
-ここで `Book.title` と `Author.name` の Resolver が定義されていません。その 2 つは parent[field]を返すだけのこういう Resolver で、
-
-```ts
-Book: {
-  title(parent) {
-    return parent.title;
-  },
-},
-```
-
-その場合は Default Resolver として Apollo が勝手に値を返してくれます。 **重要**
+`console.log` を入れたり、実装を変えてファイルを保存すると即座に動作に反映されるの Apollo Studio で動かしながら色々試してみてください。
 
 ---
 
 # Default Resolver
 
-GraphQL らしい Resolver を書こうとすると最初は難しいですが、Query の段階で完全にデータが得られるようにしておけばその後はすべて Default Resolver で `parent[key]` が返されるだけです。そう考えると多少強引ですが REST API を書くのと大差なく書けると思います。
+以下のようにサンプルコードの `Book.title` Resolver をコメントアウトしてみましょう。それでも `libraries` クエリから `books.title` を取得しても値は正常に取れています。`Book.title` は `parent[field]` を返すだけの Resolver で、graphql-js ではこれを [Default Resolver](https://www.apollographql.com/docs/apollo-server/data/resolvers/#default-resolvers) と呼び、Resolver の実装を省略することができます。
+
+```ts
+// packages/apollo-prisma-server/src/index.ts
+  Book: {
+    // titleのResolverをコメントアウトする
+    // title(parent) {
+    //   return parent.title;
+    //},
+    author(parent) {
+      return {
+        name: parent.author,
+      };
+    },
+  },
+```
+
+---
+
+# Default Resolver を活用する
+
+GraphQL らしい Resolver を書こうとすると最初は難しいですが、Query の段階で完全にデータが得られるようにしておけばその後はすべて Default Resolver が `parent[field]` を返してくれます。そう考えると多少強引ですが REST API を書くのと大差なく書けると思います。
 
 ```ts
 const resolvers = {
@@ -269,6 +281,7 @@ const resolvers = {
       return repository.books(); // authorsテーブルとJOINしない
     },
   },
+  // Library, Book の Resolver はいらない
 };
 ```
 
